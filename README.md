@@ -1,2 +1,23 @@
 # bird_CLEF_competition
 
+## Cleaning Raw Metadata Dataset
+- [x] Remove unnecessary or redundant fields: type, url, common_name, license 
+- [x] Handling missing data:
+  * [x] Remove secondary_labels field.
+  * [x] Filling latitude and longitude missing data
+
+## EDA with Metadata Dataset
+- The dataset provided has an unbalanced distribution of categories or labels.
+
+## Creating Higher Dimension Labels
+- [x] Using taxonomy file create higher dimension labels for each species.
+
+## Human Voice Recognition
+
+### English Speech Dataset
+
+The dataset for this project was get from the repository https://www.openslr.org/12
+
+### No Human Voice
+
+The dataset for this project was get from https://machine-listening.eecs.qmul.ac.uk/bird-audio-detection-challenge/
