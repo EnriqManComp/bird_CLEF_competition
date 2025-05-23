@@ -6,7 +6,7 @@ import torch
 import soundfile as sf
 import matplotlib.pyplot as plt
 
-root_dir = str(os.path.abspath(os.path.join(os.getcwd(), os.pardir)))
+
 
 def create_dir(dir: str) -> None:
     if os.path.isdir(dir):
@@ -15,16 +15,8 @@ def create_dir(dir: str) -> None:
         print('Making a new directory: ', dir)
         os.makedirs(dir)
 
-def get_accuracy(prediction: str, label: str) -> float:
-    matches = [torch.argmax(i) == torch.argmax(j) for i,j in zip(prediction, label)]
-    accuracy = matches.count(True) / len(matches)
-    return accuracy
-
-def flac2wav() -> None:
+def flac2wav(flac_path:str, wav_path:str) -> None:
     """Convert flac to wav file"""
-
-    flac_path = str(root_dir + '/bird_CLEF_competition/data/train_audio/voice/flac/')
-    wav_path = str(root_dir + '/bird_CLEF_competition/data/train_audio/voice/wav/')
     
     flac_files = [
         f for f in os.listdir(flac_path)
@@ -65,11 +57,8 @@ def get_melss(wav_file: str, output_path: str) -> None:
     plt.savefig(output_path, dpi=500, bbox_inches='tight', pad_inches=0)
     plt.close()
 
-def create_melspec_dataset():
+def create_melspec_dataset(wav_path:str, mel_path:str):
     """ Create the Mel Spectogram Images """
-
-    wav_path = str(root_dir + '/bird_CLEF_competition/data/train_audio/voice/wav/')
-    mel_path = str(root_dir + '/bird_CLEF_competition/data/train_images/voice/')
 
     wav_files = [
         f for f in os.listdir(wav_path)
@@ -86,10 +75,7 @@ def create_melspec_dataset():
 
     print("All mel spectrograms generated.")
 
-def five_sec_chunks(chunk_duration: float = 5.0) -> None:
-
-    wav_path = str(root_dir + '/bird_CLEF_competition/data/train_audio/voice/wav/')
-    chunk_path = str(root_dir + '/bird_CLEF_competition/data/train_audio/voice/wav_chunks/')
+def five_sec_chunks(wav_path:str, root_chunk_path:str, chunk_duration: float = 5.0) -> None: 
 
     wav_files = [
         f for f in os.listdir(wav_path)
@@ -100,15 +86,19 @@ def five_sec_chunks(chunk_duration: float = 5.0) -> None:
         print(f"Clipping {file}")
 
         wav_file_path = os.path.join(wav_path, file)
+        
         # Load the audio file
         audio_data, sample_rate = sf.read(wav_file_path)
         total_samples = len(audio_data)
         chunk_samples = int(chunk_duration * sample_rate)
 
+        
         # Calculate number of full chunks
         num_full_chunks = total_samples // chunk_samples
 
         base_name = os.path.splitext(os.path.basename(file))[0]
+
+       
 
         for i in range(num_full_chunks):
             start_sample = i * chunk_samples
@@ -117,10 +107,13 @@ def five_sec_chunks(chunk_duration: float = 5.0) -> None:
 
             chunk_filename = f"{base_name}_part{i+1}.wav"
             
-            chunk_path = os.path.join(chunk_path, chunk_filename)
+            chunk_path = os.path.join(root_chunk_path, chunk_filename)
 
+            
             sf.write(chunk_path, chunk_data, sample_rate)
             print(f"Saved: {chunk_path}")
+
+            
 
     print("Done splitting audio. Discarded last chunk if shorter than {chunk_duration} seconds.")
 
