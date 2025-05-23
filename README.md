@@ -16,8 +16,3 @@
 
 ### English Speech Dataset
 
-The dataset for this project was get from the repository https://www.openslr.org/12
-
-### No Human Voice
-
-The dataset for this project was get from https://machine-listening.eecs.qmul.ac.uk/bird-audio-detection-challenge/
