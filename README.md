@@ -16,5 +16,3 @@
 
 ### English Speech Dataset
 
-The dataset for this project was get from the repository https://www.openslr.org/12. 
-
