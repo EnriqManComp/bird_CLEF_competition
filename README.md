@@ -16,3 +16,13 @@
 
 ### English Speech Dataset
 
+## Skills
+- MongoDB
+- PostgreSQL
+- Data Engineering
+- Data Modeling
+- Data Cleaning
+- Data Management
+- ETL Pipelines
+- Machine Learning
+

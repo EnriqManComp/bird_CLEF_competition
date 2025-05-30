@@ -15,13 +15,16 @@ def create_dir(dir: str) -> None:
         print('Making a new directory: ', dir)
         os.makedirs(dir)
 
+def search_audio_items(audio_path:str, extension:str='wav'):
+    return [
+            f for f in os.listdir(audio_path)
+            if os.path.isfile(os.path.join(audio_path, f)) and f.endswith(f'.{extension}')
+        ]
+
 def flac2wav(flac_path:str, wav_path:str) -> None:
     """Convert flac to wav file"""
     
-    flac_files = [
-        f for f in os.listdir(flac_path)
-        if os.path.isfile(os.path.join(flac_path, f)) and f.endswith('.flac')
-        ]
+    flac_files = search_audio_items(flac_path, 'flac')
 
     for file in flac_files:
 
@@ -60,10 +63,7 @@ def get_melss(wav_file: str, output_path: str) -> None:
 def create_melspec_dataset(wav_path:str, mel_path:str):
     """ Create the Mel Spectogram Images """
 
-    wav_files = [
-        f for f in os.listdir(wav_path)
-        if os.path.isfile(os.path.join(wav_path, f)) and f.endswith('.wav')
-        ]
+    wav_files = search_audio_items(wav_path, 'wav')
     
     for file in wav_files:
         print(f"Getting Mel Spectogram of {file}")
@@ -75,20 +75,18 @@ def create_melspec_dataset(wav_path:str, mel_path:str):
 
     print("All mel spectrograms generated.")
 
-def five_sec_chunks(wav_path:str, root_chunk_path:str, chunk_duration: float = 5.0) -> None: 
+def five_sec_chunks(audio_path:str, root_chunk_path:str, chunk_duration: float = 5.0, ext:str='wav') -> None: 
+    """ Split an audio file in chunk files """
 
-    wav_files = [
-        f for f in os.listdir(wav_path)
-        if os.path.isfile(os.path.join(wav_path, f)) and f.endswith('.wav')
-        ]
+    audio_files = search_audio_items(audio_path, ext)
     
-    for file in wav_files:
+    for file in audio_files:
         print(f"Clipping {file}")
 
-        wav_file_path = os.path.join(wav_path, file)
+        audio_file_path = os.path.join(audio_path, file)
         
         # Load the audio file
-        audio_data, sample_rate = sf.read(wav_file_path)
+        audio_data, sample_rate = sf.read(audio_file_path)
         total_samples = len(audio_data)
         chunk_samples = int(chunk_duration * sample_rate)
 
@@ -97,8 +95,6 @@ def five_sec_chunks(wav_path:str, root_chunk_path:str, chunk_duration: float = 5
         num_full_chunks = total_samples // chunk_samples
 
         base_name = os.path.splitext(os.path.basename(file))[0]
-
-       
 
         for i in range(num_full_chunks):
             start_sample = i * chunk_samples
